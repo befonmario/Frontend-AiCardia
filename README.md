@@ -7,10 +7,33 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
--untuk mengakses halaman web sementara pakai url ini karena navigasi masih dalam implementasi
--'/' Halaman home
--'/login' Halaman login
--'/dashboard' Halaman User Management
--'/register' Halaman tambah user
--'/input-predict' halaman input variabel
--'/output-predict' halaman outputnya
+## Available Pages
+
+To access the web pages, use the following URLs as navigation is still being implemented:
+
+- `/` - Home Page
+- `/login` - Login Page
+- `/dashboard` - User Management Page
+- `/register` - Add User Page
+- `/input-predict` - Input Variables Page
+- `/output-predict` - Output Page
+
+## Getting Started
+
+To get started with this project, follow these steps:
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
+
+2. **Install depedencies:**
+
+   ```sh
+   npm install
+
+3. **Run the environtment:**
+
+   ```sh
+   npm run dev
