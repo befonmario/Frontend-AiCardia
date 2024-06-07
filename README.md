@@ -25,7 +25,7 @@ To get started with this project, follow these steps:
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/befonmario/Frontend-AiCardia.git
    cd your-repo
 
 2. **Install depedencies:**
