@@ -1,0 +1,11 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.background-login {
+  /* background-image: url('../src/assets/background.jpg');
+  background-size: cover;
+  background-position: center; */
+  background: linear-gradient(140deg, rgba(205,220,34,1) 0%, rgba(0,185,173,1) 39%);
+}
