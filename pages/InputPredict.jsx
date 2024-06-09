@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Form, Input, Radio, Select, Checkbox, Card } from 'antd';
+import Sidebar from '../components/Sidebar';
 
 const InputPredict = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -22,6 +23,7 @@ const InputPredict = () => {
 
   return (  
     <>
+    <Sidebar>
       <div style={{ background: '#ECECEC', padding: '30px' }}>
         <Row span={24} style={{ maxWidth: '800px' }}>
           <Title level={2} span={24} style={{ marginBottom: '30px' }}>Input Variable</Title>
@@ -180,6 +182,7 @@ const InputPredict = () => {
           </Card>
         </div>
       </div>
+      </Sidebar>
     </>
   );
 };

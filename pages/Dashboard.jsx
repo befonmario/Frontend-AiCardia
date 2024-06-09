@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
 import { Form, Input, InputNumber, Select, Popconfirm, Table, Row, Button, Col } from 'antd';
+import Sidebar from '../components/Sidebar';
 
 const { Option } = Select;
 
@@ -20,7 +21,7 @@ const originData = [
         contact: 33,
         Role: 'Staff',
     },
-    // Tambahkan objek lain di sini sesuai kebutuhan
+    // Add other objects here as needed
 ];
 
 const EditableCell = ({
@@ -186,28 +187,32 @@ const Dashboard = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <Row span={24} style={{ maxWidth: '800px' }}>
-                <Title level={2} span={24} style={{ marginBottom: '30px' }}>User Management</Title>
-            </Row>
-            <Row span={24} style={{ display: 'flex', maxWidth: '800px', marginBottom: '20px' }}>
-                <Button type="primary" onClick={handleAddUser}>Add User</Button>
-            </Row>
-            <div>
-                <Form form={form} component={false}>
-                    <Table
-                        components={{
-                            body: { cell: EditableCell },
-                        }}
-                        bordered
-                        dataSource={data}
-                        columns={mergedColumns}
-                        rowClassName="editable-row"
-                        pagination={{ onChange: cancel }}
-                    />
-                </Form>
-            </div>
-        </div>
+        <>
+            <Sidebar>
+                <div style={{ padding: '20px' }}>
+                    <Row span={24} style={{ maxWidth: '800px' }}>
+                        <Title level={2} span={24} style={{ marginBottom: '30px' }}>User Management</Title>
+                    </Row>
+                    <Row span={24} style={{ display: 'flex', maxWidth: '800px', marginBottom: '20px' }}>
+                        <Button type="primary" onClick={handleAddUser}>Add User</Button>
+                    </Row>
+                    <div>
+                        <Form form={form} component={false}>
+                            <Table
+                                components={{
+                                    body: { cell: EditableCell },
+                                }}
+                                bordered
+                                dataSource={data.map(item => ({ ...item, key: item.id }))}
+                                columns={mergedColumns}
+                                rowClassName="editable-row"
+                                pagination={{ onChange: cancel }}
+                            />
+                        </Form>
+                    </div>
+                </div>
+            </Sidebar>
+        </>
     );
 };
 
