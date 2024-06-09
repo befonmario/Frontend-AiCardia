@@ -2,7 +2,6 @@ import React from 'react';
 import Title from 'antd/es/typography/Title';
 import { Row, Button, Form, Input, Select, Space, Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Sidebar from '../components/Sidebar';
 
 const Register = () => {
