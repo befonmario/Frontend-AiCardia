@@ -2,10 +2,12 @@ import React from 'react';
 import { Card, Col, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
 import Sidebar from '../components/Sidebar';
+import { useAuth } from '../contexts/AuthContext';
 
 const { Meta } = Card;
 
 const Home = () => {
+  const { role } = useAuth();
   return (
     <>
       <Sidebar>
@@ -31,6 +33,11 @@ const Home = () => {
                   <li>(thal) - Thalassemia (3 = normal; 6 = fixed defect; 7 = reversible defect)</li>
                   <li>(num) - Diagnosis of Heart Disease (angiographic disease status) (0 = no disease, 1-4 = presence of disease in increasing severity)</li>
                 </ul>
+                <div>
+                  <h1>Welcome to the Home Page</h1>
+                  {role === 'admin' && <p>You are logged in as an admin.</p>}
+                  {role === 'staff' && <p>You are logged in as a staff member.</p>}
+                </div>
               </Card>
             </Col>
             <Col span={12}>

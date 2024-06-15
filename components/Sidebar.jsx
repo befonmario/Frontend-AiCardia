@@ -8,22 +8,24 @@ import {
   UserAddOutlined,
   HomeOutlined,
   LoginOutlined,
-  UsergroupAddOutlined
+  UsergroupAddOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const { Header, Sider, Content } = Layout;
 
 const Sidebar = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKeys, setSelectedKeys] = useState(['1']); // State untuk menyimpan kunci menu yang dipilih
+  const [selectedKeys, setSelectedKeys] = useState(['1']);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, role, name, logout } = useAuth();
 
   useEffect(() => {
-    // Perbarui kunci menu yang dipilih setiap kali lokasi berubah (navigasi dilakukan)
     const pathname = location.pathname;
-    let selectedKey = '1'; // Atur kunci menu default di sini
+    let selectedKey = '1';
     switch (pathname) {
       case '/':
         selectedKey = '1';
@@ -69,10 +71,34 @@ const Sidebar = ({ children }) => {
       case '6':
         navigate('/login');
         break;
+      case '7':
+        logout();
+        navigate('/login');
+        break;
       default:
         break;
     }
   };
+
+  const menuItems = [
+    { key: '1', icon: <HomeOutlined />, label: 'Home' },
+    { key: '2', icon: <EditOutlined />, label: 'Input Predict' },
+    { key: '3', icon: <UploadOutlined />, label: 'Output Predict' },
+  ];
+
+  if (isAuthenticated) {
+    if (role === 'admin') {
+      menuItems.push(
+        { key: '4', icon: <UserAddOutlined />, label: 'Add user' },
+        { key: '5', icon: <UsergroupAddOutlined />, label: 'Dashboard admin' }
+      );
+    }
+    menuItems.push(
+      { key: '7', icon: <LogoutOutlined />, label: 'Logout' }
+    );
+  } else {
+    menuItems.push({ key: '6', icon: <LoginOutlined />, label: 'Change account' });
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -81,25 +107,23 @@ const Sidebar = ({ children }) => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={selectedKeys} // Gunakan selectedKeys untuk menentukan kunci menu yang dipilih
+          selectedKeys={selectedKeys}
           onClick={handleMenuClick}
-          items={[
-            { key: '1', icon: <HomeOutlined />, label: 'Home' },
-            { key: '2', icon: <EditOutlined />, label: 'Input Predict' },
-            { key: '3', icon: <UploadOutlined />, label: 'Output Predict' },
-            { key: '4', icon: <UserAddOutlined />, label: 'Add user' },
-            { key: '5', icon: <UsergroupAddOutlined />, label: 'Dashboard admin' },
-            { key: '6', icon: <LoginOutlined />, label: 'Change account' },
-          ]}
+          items={menuItems}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, backgroundColor: 'white' }}>
+        <Header style={{ padding: '0 16px', backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
           />
+          {isAuthenticated && (
+            <div style={{ marginRight: 16 }}>
+              Name: {name}, Role: {role}
+            </div>
+          )}
         </Header>
         <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280, background: '#ECECEC' }}>
           {children}

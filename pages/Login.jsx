@@ -1,34 +1,48 @@
-import React from 'react'
+import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../src/assets/AiCardia_logo.png';
-
+import api from '../axios/api';
+import { useAuth } from '../contexts/AuthContext';
+import {jwtDecode} from 'jwt-decode';
 
 const Login = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
     const onFinish = async (values) => {
         try {
             const response = await api.post('/auth/login', {
                 username: values.username,
                 password: values.password
-            })
-            console.log(response)
-            localStorage.setItem('token', response.data.token)
-            navigate('/')
+            });
+            console.log(response);
+
+            const { token } = response.data;
+
+            const decodedToken = jwtDecode(token);
+            const { role, name } = decodedToken;
+
+            localStorage.setItem('token', token);
+
+            login(role, name);
+
+            navigate('/');
         } catch (error) {
             Swal.fire({
                 title: "Failed!",
-                text: error,
+                text: error.response ? error.response.data.message : error.message,
                 icon: "error",
                 timer: 2000,
                 timerProgressBar: true
             });
-            console.log(error)
+            console.log(error);
         }
     };
+
     return (
         <div className='background-login'>
             <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
@@ -36,7 +50,7 @@ const Login = () => {
                     <Card style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)', borderRadius: '10px' }}>
                         <Row gutter={16} align="middle">
                             <Col span={24}>
-                                <Title level={1} style={{ textAlign: 'center' , marginTop: '0px'}}>AiCardia</Title>
+                                <Title level={1} style={{ textAlign: 'center', marginTop: '0px' }}>AiCardia</Title>
                             </Col>
                             <Col span={12}>
                                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>

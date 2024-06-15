@@ -1,28 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
-import { Form, Input, InputNumber, Select, Popconfirm, Table, Row, Button, Col } from 'antd';
+import { Form, Input, InputNumber, Select, Popconfirm, Table, Row, Button, Col, message } from 'antd';
 import Sidebar from '../components/Sidebar';
+import axios from '../axios/api';
 
 const { Option } = Select;
-
-const originData = [
-    {
-        id: '1',
-        name: 'Edward 1',
-        username: 'Edward 1',
-        contact: 32,
-        Role: 'Staff',
-    },
-    {
-        id: '2',
-        name: 'Edward 2',
-        username: 'Edward 2',
-        contact: 33,
-        Role: 'Staff',
-    },
-    // Add other objects here as needed
-];
 
 const EditableCell = ({
     editing,
@@ -66,9 +49,27 @@ const EditableCell = ({
 
 const Dashboard = () => {
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
+    const [data, setData] = useState([]);
     const [editingId, setEditingId] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+                const response = await axios.get('/user', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setData(response.data);
+            } catch (error) {
+                message.error('Failed to fetch user data.');
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const isEditing = (record) => record.id === editingId;
 
@@ -76,8 +77,8 @@ const Dashboard = () => {
         form.setFieldsValue({
             name: record.name,
             username: record.username,
-            contact: record.contact,
-            Role: record.Role,
+            phone_number: record.phone_number,
+            role: record.role,
         });
         setEditingId(record.id);
     };
@@ -89,6 +90,12 @@ const Dashboard = () => {
     const save = async (id) => {
         try {
             const row = await form.validateFields();
+            const token = localStorage.getItem('token');
+            await axios.put(`/user/${id}`, row, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const newData = [...data];
             const index = newData.findIndex((item) => id === item.id);
             if (index > -1) {
@@ -101,13 +108,25 @@ const Dashboard = () => {
                 setEditingId('');
             }
         } catch (errInfo) {
+            message.error('Failed to save changes.');
             console.log('Validate Failed:', errInfo);
         }
     };
 
-    const deleteRecord = (id) => {
-        const newData = data.filter((item) => item.id !== id);
-        setData(newData);
+    const deleteRecord = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`/user/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const newData = data.filter((item) => item.id !== id);
+            setData(newData);
+        } catch (error) {
+            message.error('Failed to delete user.');
+            console.error('Error deleting user:', error);
+        }
     };
 
     const columns = [
@@ -127,12 +146,12 @@ const Dashboard = () => {
         },
         {
             title: 'contact',
-            dataIndex: 'contact',
+            dataIndex: 'phone_number',
             editable: true,
         },
         {
             title: 'Role',
-            dataIndex: 'Role',
+            dataIndex: 'role',
             editable: true,
             inputType: 'select',
         },
