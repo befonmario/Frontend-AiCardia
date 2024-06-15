@@ -59,8 +59,8 @@ const InputPredict = () => {
               </Form.Item>
               <Form.Item label="Gender" name="Gender">
                 <Radio.Group>
-                  <Radio value="option1">Male</Radio>
-                  <Radio value="option2">Female</Radio>
+                  <Radio value="option1">Female</Radio>
+                  <Radio value="option2">Male</Radio>
                 </Radio.Group>
               </Form.Item>
               <Form.Item label="Chest Pain Type" name="chestPainType">
