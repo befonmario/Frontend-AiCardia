@@ -102,7 +102,12 @@ const Sidebar = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider trigger={null} collapsible collapsed={collapsed} style={{ height: '100vh' }}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        style={{ height: '100vh', overflow: 'auto', position: 'fixed', left: 0 }}
+      >
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -112,7 +117,7 @@ const Sidebar = ({ children }) => {
           items={menuItems}
         />
       </Sider>
-      <Layout>
+      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
         <Header style={{ padding: '0 16px', backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Button
             type="text"
