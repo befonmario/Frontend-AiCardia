@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
-import { Form, Input, InputNumber, Select, Popconfirm, Table, Row, Button, Col, message } from 'antd';
+import { Form, Input, InputNumber, Select, Popconfirm, Table, Row, Button, Col, message, Modal, Card } from 'antd';
 import Sidebar from '../components/Sidebar';
 import axios from '../axios/api';
 
@@ -49,8 +49,11 @@ const EditableCell = ({
 
 const Dashboard = () => {
     const [form] = Form.useForm();
+    const [passwordForm] = Form.useForm();
     const [data, setData] = useState([]);
     const [editingId, setEditingId] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -129,6 +132,40 @@ const Dashboard = () => {
         }
     };
 
+    const showChangePasswordModal = (id) => {
+        setCurrentUserId(id);
+        setIsModalOpen(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+        passwordForm.resetFields();
+    };
+
+    const handlePasswordChange = async () => {
+        try {
+            const values = await passwordForm.validateFields();
+            if (values.newPassword !== values.confirmPassword) {
+                message.error('Passwords do not match.');
+                return;
+            }
+            const token = localStorage.getItem('token');
+            await axios.put(`/user/update-pass/${currentUserId}`, {
+                password: values.newPassword,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            message.success('Password updated successfully.');
+            setIsModalOpen(false);
+            passwordForm.resetFields();
+        } catch (error) {
+            message.error('Failed to update password.');
+            console.error('Error updating password:', error);
+        }
+    };
+
     const columns = [
         {
             title: 'id',
@@ -175,10 +212,13 @@ const Dashboard = () => {
                             Edit
                         </Button>
                         <Popconfirm title="Sure to delete?" onConfirm={() => deleteRecord(record.id)}>
-                            <Button type="primary" danger disabled={editingId !== ''} style={{ marginLeft: 8 }}>
+                            <Button type="primary" danger disabled={editingId !== ''} style={{ marginLeft: 8, marginRight: 8 }}>
                                 Delete
                             </Button>
                         </Popconfirm>
+                        <Button type="primary" onClick={() => showChangePasswordModal(record.id)} style={{ marginLeft: 8 }}>
+                            Change Password
+                        </Button>
                     </span>
                 );
             },
@@ -231,6 +271,38 @@ const Dashboard = () => {
                     </div>
                 </div>
             </Sidebar>
+            <Modal
+                title="Change Password"
+                open={isModalOpen}
+                onCancel={handleCancel}
+                footer={[
+                    <Button key="cancel" onClick={handleCancel}>
+                        Cancel
+                    </Button>,
+                    <Button key="submit" type="primary" onClick={handlePasswordChange}>
+                        Submit
+                    </Button>,
+                ]}
+            >
+                <Card>
+                    <Form form={passwordForm} layout="vertical">
+                        <Form.Item
+                            label="New Password"
+                            name="newPassword"
+                            rules={[{ required: true, message: 'Please input the new password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item
+                            label="Confirm Password"
+                            name="confirmPassword"
+                            rules={[{ required: true, message: 'Please confirm the new password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                    </Form>
+                </Card>
+            </Modal>
         </>
     );
 };
