@@ -216,7 +216,7 @@ const Dashboard = () => {
                                 Delete
                             </Button>
                         </Popconfirm>
-                        <Button type="primary" onClick={() => showChangePasswordModal(record.id)} style={{ marginLeft: 8 }}>
+                        <Button type="primary" onClick={() => showChangePasswordModal(record.id)} style={{ marginLeft: 8 }} disabled={editingId !== ''}>
                             Change Password
                         </Button>
                     </span>

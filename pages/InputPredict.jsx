@@ -1,16 +1,35 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Form, Input, Radio, Select, Card } from 'antd';
 import Sidebar from '../components/Sidebar';
+import axios from 'axios';
+
+const FLASK_API_URL = 'https://140b-114-79-49-141.ngrok-free.app/predict';
 
 const InputPredict = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
+  const [form] = Form.useForm();
+
   const handlePredict = () => {
-    console.log('Predict button clicked!');
-    console.log('Form Data:', formData);
-    navigate('/output-predict');
+    form.validateFields().then(values => {
+      console.log('Predict button clicked!');
+      console.log('Form Data:', values);
+
+      // Send the form data to the Flask API
+      axios.post(FLASK_API_URL, values)
+        .then(response => {
+          console.log('Prediction response:', response.data);
+          const prediction = response.data.prediction;
+          navigate('/output-predict', { state: { prediction } });
+        })
+        .catch(error => {
+          console.error('There was an error making the prediction request!', error);
+        });
+    }).catch(errorInfo => {
+      console.log('Validation failed:', errorInfo);
+    });
   };
 
   const validateNumberRange = (rule, value, min, max, type = 'int') => {
@@ -26,7 +45,6 @@ const InputPredict = () => {
       }
     });
   };
-  
 
   return (
     <>
@@ -38,6 +56,7 @@ const InputPredict = () => {
           <div style={{ padding: '20px' }}>
             <Card>
               <Form
+                form={form}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 layout="vertical"
@@ -67,34 +86,34 @@ const InputPredict = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Gender"
-                  name="Gender"
+                  label="Sex"
+                  name="sex"
                   rules={[{ required: true, message: 'Please select your gender!' }]}
                   style={{ maxWidth: '50%' }}
                 >
                   <Radio.Group>
-                    <Radio value="0">Female</Radio>
-                    <Radio value="1">Male</Radio>
+                    <Radio value={0}>Female</Radio>
+                    <Radio value={1}>Male</Radio>
                   </Radio.Group>
                 </Form.Item>
 
                 <Form.Item
                   label="Chest Pain Type"
-                  name="chestPainType"
+                  name="cp"
                   rules={[{ required: true, message: 'Please select chest pain type!' }]}
                   style={{ maxWidth: '50%' }} 
                 >
                   <Select placeholder='cp'>
-                    <Select.Option value="1">1. typical angina</Select.Option>
-                    <Select.Option value="2">2. atypical angina</Select.Option>
-                    <Select.Option value="3">3. non-anginal pain</Select.Option>
-                    <Select.Option value="4">4. asymptomatic</Select.Option>
+                    <Select.Option value={1}>1. typical angina</Select.Option>
+                    <Select.Option value={2}>2. atypical angina</Select.Option>
+                    <Select.Option value={3}>3. non-anginal pain</Select.Option>
+                    <Select.Option value={4}>4. asymptomatic</Select.Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
                   label="Resting Blood Pressure"
-                  name="restingBloodPressure"
+                  name="trestbps"
                   rules={[
                     { required: true, message: 'Please input your resting blood pressure!' },
                     { validator: (rule, value) => validateNumberRange(rule, value, 90, 200) }
@@ -102,14 +121,14 @@ const InputPredict = () => {
                   style={{ maxWidth: '50%' }}  
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Input id="restingBloodPressure" placeholder='trestbps' />
+                    <Input id="trestbps" placeholder='trestbps' />
                     <span style={{ marginLeft: '10px' }}>mm Hg</span>
                   </div>
                 </Form.Item>
 
                 <Form.Item
                   label="Serum Cholesterol"
-                  name="serumCholesterol"
+                  name="chol"
                   rules={[
                     { required: true, message: 'Please input your serum cholesterol!' },
                     { validator: (rule, value) => validateNumberRange(rule, value, 110, 564) }
@@ -117,39 +136,39 @@ const InputPredict = () => {
                   style={{ maxWidth: '50%' }}  
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Input id="serumCholesterol" placeholder='chol' />
+                    <Input id="chol" placeholder='chol' />
                     <span style={{ marginLeft: '10px' }}>mg/dl</span>
                   </div>
                 </Form.Item>
 
                 <Form.Item
                   label="Fasting Blood Sugar"
-                  name="fastingBloodSugar"
+                  name="fbs"
                   rules={[{ required: true, message: 'Please select fasting blood sugar!' }]}
                   style={{ maxWidth: '50%' }}  
                 >
                   <Radio.Group>
-                    <Radio value="0">No</Radio>
-                    <Radio value="1">Yes</Radio>
+                    <Radio value={0}>No</Radio>
+                    <Radio value={1}>Yes</Radio>
                   </Radio.Group>
                 </Form.Item>
 
                 <Form.Item
                   label="Resting Electrocardiographic Result"
-                  name="restingElectroResult"
+                  name="restecg"
                   rules={[{ required: true, message: 'Please select resting electrocardiographic result!' }]}
                   style={{ maxWidth: '50%' }}  
                 >
                   <Select placeholder='restecg'>
-                    <Select.Option value="0">0. normal</Select.Option>
-                    <Select.Option value="1">1. having ST-T wave abnormality</Select.Option>
-                    <Select.Option value="2">2. showing probable or definite left ventricular hypertrophy</Select.Option>
+                    <Select.Option value={0}>0. normal</Select.Option>
+                    <Select.Option value={1}>1. having ST-T wave abnormality</Select.Option>
+                    <Select.Option value={2}>2. showing probable or definite left ventricular hypertrophy</Select.Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
                   label="Maximum Heart Rate Achieved"
-                  name="maxHeartRate"
+                  name="thalach"
                   rules={[
                     { required: true, message: 'Please input your maximum heart rate!' },
                     { validator: (rule, value) => validateNumberRange(rule, value, 0, Infinity) }
@@ -157,33 +176,33 @@ const InputPredict = () => {
                   style={{ maxWidth: '50%' }}  
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Input id="maxHeartRate" placeholder='thalach' />
+                    <Input id="thalach" placeholder='thalach' />
                     <span style={{ marginLeft: '10px' }}>beats per minute</span>
                   </div>
                 </Form.Item>
 
                 <Form.Item
                   label="Exercise Induced Angina"
-                  name="exerciseInducedAngina"
+                  name="exang"
                   rules={[{ required: true, message: 'Please select exercise induced angina!' }]}
                   style={{ maxWidth: '50%' }}  
                 >
                   <Radio.Group>
-                    <Radio value="0">No</Radio>
-                    <Radio value="1">Yes</Radio>
+                    <Radio value={0}>No</Radio>
+                    <Radio value={1}>Yes</Radio>
                   </Radio.Group>
                 </Form.Item>
 
                 <Form.Item
                   label="ST Depression Induced by Exercise Relative to Rest"
-                  name="stDepression"
+                  name="oldpeak"
                   rules={[
                     { required: true, message: 'Please input the ST depression!' },
                     { validator: (rule, value) => validateNumberRange(rule, value, 0, 6.2, 'float') }
                   ]}
                   style={{ maxWidth: '50%' }}  
                 >
-                  <Input id="stDepression" placeholder='oldpeak' />
+                  <Input id="oldpeak" placeholder='oldpeak' />
                 </Form.Item>
 
                 <Form.Item
@@ -193,38 +212,38 @@ const InputPredict = () => {
                   style={{ maxWidth: '50%' }}  
                 >
                   <Select placeholder='slope'>
-                    <Select.Option value="1">1 = upsloping</Select.Option>
-                    <Select.Option value="2">2 = flat</Select.Option>
-                    <Select.Option value="3">3 = downsloping</Select.Option>
+                    <Select.Option value={1}>1 = upsloping</Select.Option>
+                    <Select.Option value={2}>2 = flat</Select.Option>
+                    <Select.Option value={3}>3 = downsloping</Select.Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
                   label="Number of Major Vessels Colored by Fluoroscopy"
-                  name="vesselsColored"
+                  name="ca"
                   rules={[{ required: true, message: 'Please select number of major vessels colored by fluoroscopy!' }]}
                   style={{ maxWidth: '50%' }}  
                 >
                   <Select placeholder='ca'>
-                    <Select.Option value="0">0</Select.Option>
-                    <Select.Option value="1">1</Select.Option>
-                    <Select.Option value="2">2</Select.Option>
-                    <Select.Option value="3">3</Select.Option>
+                    <Select.Option value={0}>0</Select.Option>
+                    <Select.Option value={1}>1</Select.Option>
+                    <Select.Option value={2}>2</Select.Option>
+                    <Select.Option value={3}>3</Select.Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item
                   label="Thalassemia"
-                  name="thalassemia"
+                  name="thal"
                   rules={[
                     { required: true, message: 'Please select the thalassemia!' }
                   ]}
                   style={{ maxWidth: '50%' }}
                 >
                   <Select placeholder='thal'>
-                    <Select.Option value="3">3</Select.Option>
-                    <Select.Option value="6">6</Select.Option>
-                    <Select.Option value="7">7</Select.Option>
+                    <Select.Option value={3}>3</Select.Option>
+                    <Select.Option value={6}>6</Select.Option>
+                    <Select.Option value={7}>7</Select.Option>
                   </Select>
                 </Form.Item>
 

@@ -13,20 +13,20 @@ const Home = () => {
 
   // Data untuk input prediksi
   const inputData = [
-    { Parameter: 'Age', description: 'Age (years)' },
-    { Parameter: 'Sex', description: 'Sex (1 = male; 0 = female)' },
-    { Parameter: 'Chest Pain Type', description: '1 = typical angina, 2 = atypical angina, 3 = non-anginal pain, 4 = asymptomatic' },
-    { Parameter: 'Resting Blood Pressure', description: 'Resting Blood Pressure (mm Hg)' },
-    { Parameter: 'Serum Cholesterol', description: 'Serum Cholesterol (mg/dl)' },
-    { Parameter: 'Fasting Blood Sugar', description: '1 = true; 0 = false; > 120 mg/dl' },
-    { Parameter: 'Resting Electrocardiographic Results', description: '0 = normal, 1 = having ST-T wave abnormality, 2 = showing probable or definite left ventricular hypertrophy' },
-    { Parameter: 'Maximum Heart Rate Achieved', description: 'Maximum Heart Rate Achieved (beats per minute)' },
-    { Parameter: 'Exercise Induced Angina', description: '1 = yes; 0 = no' },
-    { Parameter: 'ST Depression Induced by Exercise Relative to Rest', description: 'Numeric value in mm' },
-    { Parameter: 'Slope of the Peak Exercise ST Segment', description: '1 = upsloping, 2 = flat, 3 = downsloping' },
-    { Parameter: 'Number of Major Vessels Colored by Fluoroscopy', description: '0-3' },
-    { Parameter: 'Thalassemia', description: '3 = normal; 6 = fixed defect; 7 = reversible defect' },
-    { Parameter: 'Diagnosis of Heart Disease', description: '0 = no disease, 1-4 = presence of disease in increasing severity' },
+    { key: '1', Parameter: 'Age', description: 'Age (years)' },
+    { key: '2', Parameter: 'Sex', description: 'Sex (1 = male; 0 = female)' },
+    { key: '3', Parameter: 'Chest Pain Type', description: '1 = typical angina, 2 = atypical angina, 3 = non-anginal pain, 4 = asymptomatic' },
+    { key: '4', Parameter: 'Resting Blood Pressure', description: 'Resting Blood Pressure (mm Hg)' },
+    { key: '5', Parameter: 'Serum Cholesterol', description: 'Serum Cholesterol (mg/dl)' },
+    { key: '6', Parameter: 'Fasting Blood Sugar', description: '1 = true; 0 = false; > 120 mg/dl' },
+    { key: '7', Parameter: 'Resting Electrocardiographic Results', description: '0 = normal, 1 = having ST-T wave abnormality, 2 = showing probable or definite left ventricular hypertrophy' },
+    { key: '8', Parameter: 'Maximum Heart Rate Achieved', description: 'Maximum Heart Rate Achieved (beats per minute)' },
+    { key: '9', Parameter: 'Exercise Induced Angina', description: '1 = yes; 0 = no' },
+    { key: '10', Parameter: 'ST Depression Induced by Exercise Relative to Rest', description: 'Numeric value in mm' },
+    { key: '11', Parameter: 'Slope of the Peak Exercise ST Segment', description: '1 = upsloping, 2 = flat, 3 = downsloping' },
+    { key: '12', Parameter: 'Number of Major Vessels Colored by Fluoroscopy', description: '0-3' },
+    { key: '13', Parameter: 'Thalassemia', description: '3 = normal; 6 = fixed defect; 7 = reversible defect' },
+    { key: '14', Parameter: 'Diagnosis of Heart Disease', description: '0 = no disease, 1-4 = presence of disease in increasing severity' },
   ];
 
   // Kolom untuk tabel input data
@@ -76,12 +76,6 @@ const Home = () => {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}>
-              <Card title="Output Data">
-                <Meta description="Predicted patient: xxx" />
-                <Meta description="Dataset available: xxx" />
-              </Card>
-            </Col>
             <Col span={12}>
               <Card title="User Role">
                 {role === 'admin' && <p>You are logged in as an admin.</p>}
