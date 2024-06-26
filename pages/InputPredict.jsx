@@ -5,7 +5,7 @@ import { Row, Button, Form, Input, Radio, Select, Card } from 'antd';
 import Sidebar from '../components/Sidebar';
 import axios from 'axios';
 
-const FLASK_API_URL = 'https://140b-114-79-49-141.ngrok-free.app/predict';
+const FLASK_API_URL = 'https://beagle-hopeful-chicken.ngrok-free.app/predict';
 
 const InputPredict = () => {
   const navigate = useNavigate();

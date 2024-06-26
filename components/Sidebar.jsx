@@ -126,7 +126,7 @@ const Sidebar = ({ children }) => {
           />
           {isAuthenticated && (
             <div style={{ marginRight: 16 }}>
-              Name: {name}, Role: {role}
+              Role: {role}
             </div>
           )}
         </Header>
